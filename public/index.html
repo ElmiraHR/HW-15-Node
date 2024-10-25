@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Простой чат</title>
+    <script src="/socket.io/socket.io.js"></script>
+    <style>
+        body { font-family: Arial, sans-serif; }
+        #messages { border: 1px solid #ccc; padding: 10px; height: 300px; overflow-y: scroll; }
+        #input { margin-top: 10px; }
+    </style>
+</head>
+<body>
+    <h1>Самый простой, но работающий чат на свете</h1>
+    <div id="messages"></div>
+    <input id="input" autocomplete="off" /><button id="send">Отправить</button>
+
+    <script>
+        const socket = io();
+
+        document.getElementById('send').onclick = () => {
+            const msg = document.getElementById('input').value;
+            socket.emit('chat message', msg);
+            document.getElementById('input').value = '';
+        };
+
+        socket.on('message received', (msg) => {
+            const messagesDiv = document.getElementById('messages');
+            messagesDiv.innerHTML += `<div>${msg}</div>`;
+            messagesDiv.scrollTop = messagesDiv.scrollHeight; // Прокрутка вниз
+        });
+    </script>
+</body>
+</html>
